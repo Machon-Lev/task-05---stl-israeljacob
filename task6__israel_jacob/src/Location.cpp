@@ -1,6 +1,6 @@
 #include"Location.h"
 
-Location::Location(double x, double y): x(x), y(y)
+Location::Location(long double x,long double y): x(x), y(y)
 {
 }
 

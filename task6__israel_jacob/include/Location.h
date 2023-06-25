@@ -3,13 +3,12 @@
 
 class Location {
 private:
-	std::string name;
 	double x;
 	double y;
 
 public:
-	Location(double x, double y);
+	Location(long double x, long double y);
 	double getX() const;
 	double getY() const;
-
+	// 41.93, 88       41.85, 87.96  
 };
