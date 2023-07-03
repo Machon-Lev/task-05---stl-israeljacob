@@ -6,24 +6,18 @@
 std::string getName(Cities cities);
 double getRadius();
 int getNorm();
+int readFromFile(Cities& cities);
+void getCities(Cities& cicities, std::string name, double radius, int nurm);
 
 int main()
 {
 	Cities cities = Cities();
 	// Create an instance of the Cities class
 
-	try {
-		cities.addFromFile("data.txt");
-		// Attempt to load city data from the "data.txt" file
-	}
-	catch (const std::exception& e) {
-		std::cout << e.what();
+	if (!readFromFile(cities))
 		return 0;
-	}
 
 	std::vector<std::pair<std::string, Location>> nearCities;
-	// Vector to store the nearby cities
-	int numOfCitiesInNorth;
 	// Variable to store the number of cities to the north
 	std::string name;
 	double radius;
@@ -45,23 +39,7 @@ int main()
 			std::cout << e.what() << std::endl;
 			return 0;
 		}
-		nearCities = cities.nearCities(name, radius, norm);
-		// Retrieve the cities within the specified radius using the specified norm
-		numOfCitiesInNorth = cities.northOfTheCity(nearCities, name);
-		// Count the number of cities to the north of the selected city
-		std::cout << "Search result:" << std::endl << nearCities.size()
-			<< " city / cities found in the given radius." << std::endl
-			<< numOfCitiesInNorth << " cities are to the north of the selected city."
-			<< std::endl << "City list:" << std::endl;
-		std::vector<std::string> names;
-		std::transform(nearCities.begin(), nearCities.end(), std::back_inserter(names),
-			[](const std::pair<std::string, Location>& pair) {
-				return pair.first; // Extract the string from the pair
-			});
-		// Extract only the city names from the pairs and store them in the 'names' vector
-		std::copy(names.begin(), names.end(), std::ostream_iterator<std::string>(std::cout, "\n"));
-		// Print the city names to the console
-		std::cin.ignore();
+		getCities(cities, name, radius, norm);
 		// Ignore any remaining input in the buffer
 		name = getName(cities);
 		// Get the name of the next selected city from the user
@@ -146,4 +124,40 @@ int getNorm() {
 		}
 	}
 	return inorm; // Return the valid norm entered by the user
+}
+
+int readFromFile(Cities& cities)
+{
+	try {
+		cities.addFromFile("data.txt");
+		// Attempt to load city data from the "data.txt" file
+	}
+	catch (const std::exception& e) {
+		std::cout << e.what();
+		return 0;
+	}
+	return 1;
+}
+
+void getCities(Cities& cities, std::string name, double radius, int norm)
+{
+	std::vector<std::pair<std::string, Location>> nearCities;
+	nearCities = cities.nearCities(name, radius, norm);
+	// Retrieve the cities within the specified radius using the specified norm
+	int numOfCitiesInNorth = cities.northOfTheCity(nearCities, name);
+	// Count the number of cities to the north of the selected city
+	std::cout << "Search result:" << std::endl << nearCities.size()
+		<< " city / cities found in the given radius." << std::endl
+		<< numOfCitiesInNorth << " cities are to the north of the selected city."
+		<< std::endl << "City list:" << std::endl;
+	std::vector<std::string> names;
+	std::transform(nearCities.begin(), nearCities.end(), std::back_inserter(names),
+		[](const std::pair<std::string, Location>& pair) {
+			return pair.first; // Extract the string from the pair
+		});
+	// Extract only the city names from the pairs and store them in the 'names' vector
+	std::copy(names.begin(), names.end(), std::ostream_iterator<std::string>(std::cout, "\n"));
+	// Print the city names to the console
+	std::cin.ignore();
+	// Ignore any remaining input in the buffer
 }

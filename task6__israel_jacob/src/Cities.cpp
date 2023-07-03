@@ -91,18 +91,22 @@ std::vector<std::pair<std::string, Location>> Cities::distanceBySquare(double di
 
 // Helper method to filter cities within a radius using the Euclidean distance
 std::vector<std::pair<std::string, Location>> Cities::normalEuclideanDistance(std::vector<std::pair<std::string, Location>> vCities, double radius, double x, double y) {
+	/*std::vector<std::pair<std::string, Location>> newCities;*/
+
+	/*std::copy_if(vCities.begin(), vCities.end(), std::back_inserter(newCities),
+		[x, y, radius](std::pair<std::string, Location> pair) {
+			double dx = pair.second.getX() - x;
+	double dy = pair.second.getY() - y;
+	return (dx * dx + dy * dy) > radius * radius; });*/
+	
 	vCities.erase(std::remove_if(vCities.begin(), vCities.end(),
 		[x, y, radius](std::pair<std::string, Location> pair) {
 			double dx = pair.second.getX() - x;
 	double dy = pair.second.getY() - y;
-	return (dx * dx + dy * dy) >= radius * radius; }), vCities.end());
-	std::sort(vCities.begin(), vCities.end(),
-		[x, y](std::pair<std::string, Location> pair1, std::pair<std::string, Location> pair2) {
-			double dx1 = pair1.second.getX() - x;
-			double dy1 = pair1.second.getY() - y;
-			double dx2 = pair2.second.getX() - x;
-			double dy2 = pair2.second.getY() - y;
-			return dx1 * dx1 + dy1 * dy1 <= dx2 * dx2 + dy2 * dy2; });
+	return (dx * dx + dy * dy) > radius * radius; }), vCities.end());
+
+	//Sort the vector by distance
+	vCities = sortVetor(vCities, x, y);
 	return vCities;
 }
 
@@ -112,16 +116,11 @@ std::vector<std::pair<std::string, Location>> Cities::infinityNorm(std::vector<s
 		[x, y, radius](std::pair<std::string, Location> pair) {
 			double dx = std::abs(pair.second.getX() - x);
 	double dy = std::abs(pair.second.getY() - y);
-	return std::max(dx, dy) >= radius;
+	return std::max(dx, dy) > radius;
 		}), vCities.end());
-	std::sort(vCities.begin(), vCities.end(),
-		[x, y](std::pair<std::string, Location> pair1, std::pair<std::string, Location> pair2) {
-			double dx1 = std::abs(pair1.second.getX() - x);
-	double dy1 = std::abs(pair1.second.getY() - y);
-	double dx2 = std::abs(pair2.second.getX() - x);
-	double dy2 = std::abs(pair2.second.getY() - y);
-	return std::max(dx1, dy1) <= std::max(dx2, dy2);
-		});
+
+	//Sort the vector by distance
+	vCities = sortVetor(vCities, x, y);
 	return vCities;
 }
 
@@ -131,16 +130,23 @@ std::vector<std::pair<std::string, Location>> Cities::manhattanDistance(std::vec
 		[x, y, radius](std::pair<std::string, Location> pair) {
 			double dx = std::abs(pair.second.getX() - x);
 	double dy = std::abs(pair.second.getY() - y);
-	return dx + dy >= radius;
+	return dx + dy > radius;
 		}), vCities.end());
+
+	//Sort the vector by distance
+	vCities = sortVetor(vCities, x, y);
+	return vCities;
+}
+
+std::vector<std::pair<std::string, Location>> Cities::sortVetor(std::vector<std::pair<std::string, Location>> vCities, double x, double y)
+{
 	std::sort(vCities.begin(), vCities.end(),
 		[x, y](std::pair<std::string, Location> pair1, std::pair<std::string, Location> pair2) {
-			double dx1 = std::abs(pair1.second.getX() - x);
-	double dy1 = std::abs(pair1.second.getY() - y);
-	double dx2 = std::abs(pair2.second.getX() - x);
-	double dy2 = std::abs(pair2.second.getY() - y);
-	return dx1 + dy1 <= dx2 + dy2;
-		});
+			double dx1 = pair1.second.getX() - x;
+	double dy1 = pair1.second.getY() - y;
+	double dx2 = pair2.second.getX() - x;
+	double dy2 = pair2.second.getY() - y;
+	return dx1 * dx1 + dy1 * dy1 <= dx2 * dx2 + dy2 * dy2; });
 	return vCities;
 }
 

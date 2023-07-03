@@ -16,6 +16,7 @@ private:
     std::vector<std::pair<std::string, Location>> normalEuclideanDistance(std::vector<std::pair<std::string, Location>> vCities, double radius, double x, double y);
     std::vector<std::pair<std::string, Location>> infinityNorm(std::vector<std::pair<std::string, Location>> vCities, double radius, double x, double y);
     std::vector<std::pair<std::string, Location>> manhattanDistance(std::vector<std::pair<std::string, Location>> vCities, double radius, double x, double y);
+    std::vector<std::pair<std::string, Location>> sortVetor(std::vector<std::pair<std::string, Location>> vCities, double x, double y);
 
     // Helper method for checking file validity
     std::string checkFile(std::ifstream& inputFile);
